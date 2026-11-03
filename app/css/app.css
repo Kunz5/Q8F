@@ -1,0 +1,164 @@
+/* Q8F · TV layout at 1920 x 1080 */
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0a0d14; }
+#root { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #fff; font-family: 'Inter', 'Samsung One', sans-serif; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; border: 0; padding: 0; margin: 0; background: none; }
+
+/* Motion */
+.bg { transition: opacity 1500ms cubic-bezier(.4,0,.2,1); }
+.panel { transition: transform 420ms cubic-bezier(.22,1,.36,1), opacity 320ms ease; will-change: transform, opacity; }
+.item { transition: color 200ms ease; }
+.item .lab { transition: opacity 220ms ease, transform 300ms cubic-bezier(.22,1,.36,1); }
+.tile, .row { transition: transform 320ms cubic-bezier(.22,1,.36,1), background 260ms ease, color 220ms ease; will-change: transform; }
+.fade, #caption, #handoff, #toast { transition: opacity 380ms ease, transform 520ms cubic-bezier(.2,.8,.2,1); }
+.reduced * { transition-duration: 140ms !important; }
+
+/* Liquid glass: a lit rim and a specular sheen on every glass object */
+.lg { position: relative; isolation: isolate; }
+.lg::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2;
+  background: linear-gradient(150deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.18) 32%, rgba(255,255,255,0.04) 58%, rgba(255,255,255,0.5) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.lg::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+  background: radial-gradient(120% 65% at 18% -6%, rgba(255,255,255,0.42), rgba(255,255,255,0) 55%), radial-gradient(70% 38% at 82% 108%, rgba(255,255,255,0.20), rgba(255,255,255,0) 70%); }
+.lg > * { position: relative; z-index: 3; }
+.g-liquid { background: linear-gradient(160deg, rgba(255,255,255,0.24), rgba(255,255,255,0.06) 52%, rgba(255,255,255,0.13)); -webkit-backdrop-filter: blur(28px) saturate(185%) brightness(1.08); backdrop-filter: blur(28px) saturate(185%) brightness(1.08); }
+.g-thick { -webkit-backdrop-filter: blur(44px) saturate(170%); backdrop-filter: blur(44px) saturate(170%); }
+.g-smoke { background: linear-gradient(180deg, rgba(18,22,32,0.66), rgba(10,13,20,0.74)); -webkit-backdrop-filter: blur(54px) saturate(140%); backdrop-filter: blur(54px) saturate(140%); }
+.g-smoke::after { background: radial-gradient(90% 40% at 20% -8%, rgba(255,255,255,0.16), rgba(255,255,255,0) 60%); }
+.g-clear { background: rgba(255,255,255,0.12); -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%); box-shadow: inset 0 1px 1px rgba(255,255,255,0.5), 0 10px 30px -12px rgba(0,0,0,0.45); }
+.g-clear::after { background: radial-gradient(100% 80% at 30% -20%, rgba(255,255,255,0.3), rgba(255,255,255,0) 60%); }
+
+/* Balanced glass: no live blur, same look from tinted layers. For smoother motion. */
+.lite .g-liquid, .lite .g-thick, .lite .g-smoke, .lite .g-clear { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.lite .g-liquid { background: linear-gradient(160deg, rgba(120,135,160,0.55), rgba(40,48,64,0.55) 52%, rgba(80,92,116,0.55)); }
+.lite .g-clear { background: rgba(30,38,54,0.55); }
+.lite .g-smoke { background: linear-gradient(180deg, rgba(18,22,32,0.9), rgba(10,13,20,0.94)); }
+.lite #railS { background: linear-gradient(160deg, rgba(110,124,150,0.55), rgba(36,44,60,0.6)); }
+.lite #railL { background: linear-gradient(180deg, rgba(34,42,60,0.86), rgba(16,20,30,0.9)); }
+/* Pages that are not showing never pay for live blur */
+.page:not(.on) .g-smoke, .page:not(.on) .g-liquid { -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* Background */
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.bg.on { opacity: 1; }
+#hold.snap { transition: none; }
+/* Photos drift in slowly (compositor-only scale) while they are on screen */
+.bg.photo.kb { animation: kb 14s ease-out forwards; }
+@keyframes kb { from { transform: scale(1); } to { transform: scale(1.08); } }
+.reduced .bg.photo.kb { animation: none; }
+#scrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(4,8,16,0.42) 0%, rgba(4,8,16,0) 26%), linear-gradient(0deg, rgba(4,8,16,0.55) 0%, rgba(4,8,16,0) 44%); }
+
+/* Clock */
+#clock { position: absolute; left: 176px; top: 64px; text-shadow: 0 2px 24px rgba(0,0,0,0.35); }
+#time { font-size: 112px; line-height: 1; font-variant-numeric: tabular-nums; }
+#date { margin-top: 10px; font-size: 26px; color: rgba(255,255,255,0.88); }
+
+/* Now showing */
+#caption { position: absolute; left: 176px; bottom: 52px; display: flex; align-items: center; gap: 14px; padding: 14px 24px; border-radius: 30px; font-size: 20px; color: rgba(255,255,255,0.9); text-shadow: 0 1px 10px rgba(0,0,0,0.4); }
+#caption .dot { width: 8px; height: 8px; border-radius: 4px; background: #fff; }
+#caption b { font-weight: 600; }
+#caption #detail { color: rgba(255,255,255,0.7); }
+
+/* Rail */
+/* Rail: two fixed-size glass pills cross-fade (opacity only), nothing is re-laid out */
+#rail { position: absolute; left: 40px; top: 300px; width: 270px; padding: 14px; box-sizing: border-box; }
+.railbg { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 40px; will-change: opacity; transition: opacity 240ms ease;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.55), inset 0 -24px 40px -26px rgba(255,255,255,0.25), inset 1px 0 0 rgba(255,150,200,0.14), inset -1px 0 0 rgba(140,210,255,0.18), 0 40px 80px -30px rgba(0,0,0,0.6), 0 10px 22px -10px rgba(0,0,0,0.35); }
+#railS { width: 96px; background: linear-gradient(160deg, rgba(255,255,255,0.24), rgba(255,255,255,0.07) 55%, rgba(255,255,255,0.12)); }
+#railL { width: 270px; opacity: 0; background: linear-gradient(180deg, rgba(34,42,60,0.6), rgba(16,20,30,0.7)); }
+#rail.open #railL { opacity: 1; }
+#rail.open #railS { opacity: 0; }
+#railItems { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 8px; }
+.item { position: relative; display: flex; align-items: center; gap: 20px; height: 68px; padding: 0 20px; white-space: nowrap; color: #fff; }
+.item svg, .item .lab { position: relative; z-index: 1; }
+.item svg { flex: none; width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.item .lab { font-size: 24px; font-weight: 500; opacity: 0; transform: translateX(-8px); }
+#rail.open .item .lab { opacity: 1; transform: none; }
+/* Highlights are pre-drawn and only fade: a small chip for the current page, a full row for focus */
+.item::before, .item::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; border-radius: 26px; opacity: 0; transition: opacity 200ms ease; will-change: opacity; }
+.item::after { width: 68px; background: rgba(255,255,255,0.18); box-shadow: inset 0 1px 1px rgba(255,255,255,0.45); }
+.item::before { width: 242px; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(236,242,252,0.92)); box-shadow: inset 0 -2px 6px rgba(120,140,170,0.25), 0 14px 30px -10px rgba(0,0,0,0.45); }
+.item.cur::after { opacity: 1; }
+.item.f::before { opacity: 1; }
+.item.f { color: #0a0d14; }
+
+/* Pages */
+/* Pages stay drawn and only fade, so switching never repaints them from scratch */
+.page { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: translate3d(0,14px,0); will-change: opacity, transform; transition: opacity 260ms ease, transform 340ms cubic-bezier(.22,1,.36,1); }
+.page.on { opacity: 1; transform: none; }
+#fps { position: absolute; right: 24px; top: 20px; padding: 8px 14px; border-radius: 12px; background: rgba(0,0,0,0.6); font: 500 20px 'Inter', sans-serif; color: #9ff0a8; display: none; z-index: 50; }
+#fps.on { display: block; }
+.pageTitle { position: absolute; left: 380px; top: 270px; margin: 0; font-family: 'Inter Tight', sans-serif; font-size: 56px; font-weight: 500; letter-spacing: -1px; text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+.pageTitle.inPanel { position: static; font-size: 52px; text-shadow: none; }
+
+/* Home carousel */
+#stageWrap { position: absolute; left: 0; right: 0; top: 540px; height: 300px; }
+#stage { position: absolute; left: 50%; top: 20px; width: 0; height: 0; }
+/* Glass icons: each app's brand gradient poured into glass. Drawn in CSS + SVG, no image files.
+   --c1/--c2 are the brand gradient, --light the brand's own light pooling at the bottom. */
+.gi { position: relative; display: flex; align-items: center; justify-content: center; border-radius: 27%;
+  background: linear-gradient(155deg, rgba(var(--c1),0.95) 0%, rgba(var(--c2),0.9) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.26), inset 0 2px 2px rgba(255,255,255,0.6), inset 0 -12px 26px -12px rgba(var(--light),0.55), inset 1.5px 0 0 rgba(255,160,210,0.22), inset -1.5px 0 0 rgba(150,220,255,0.28), 0 18px 30px -18px rgba(0,0,0,0.55); }
+.gi::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(80% 55% at 72% 112%, rgba(var(--light),0.6), rgba(var(--light),0) 70%), radial-gradient(120% 70% at 18% -8%, rgba(255,255,255,0.55), rgba(255,255,255,0) 52%); }
+.gi::after { content: ''; position: absolute; left: 14%; right: 14%; top: 4px; height: 2px; border-radius: 2px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.85), rgba(255,255,255,0)); }
+/* No filter on the mark: a drop-shadow filter re-renders on every scale step and caused lag */
+.gi svg { position: relative; z-index: 1; }
+.panel { backface-visibility: hidden; transform-origin: 50% 50%; }
+
+/* Carousel: the panels are the glass icons. Shadows fixed; focus fades in a glow layer. */
+.panel { position: absolute; left: -110px; top: 0; width: 220px; height: 220px; }
+.panel .glow { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 260ms ease;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.85), 0 0 48px -6px var(--glow); }
+.panel.f .glow { opacity: 1; }
+.tile .gi { width: 84px; height: 84px; }
+.mark { font-family: 'Inter Tight', sans-serif; font-weight: 600; letter-spacing: -1px; text-shadow: 0 2px 18px rgba(0,0,0,0.25); }
+#heroName { position: absolute; left: 0; right: 0; top: 830px; text-align: center; font-family: 'Inter Tight', sans-serif; font-size: 46px; font-weight: 500; letter-spacing: -0.5px; text-shadow: 0 2px 20px rgba(0,0,0,0.45); }
+#heroLine { position: absolute; left: 0; right: 0; top: 892px; text-align: center; font-size: 22px; color: rgba(255,255,255,0.82); text-shadow: 0 2px 20px rgba(0,0,0,0.45); }
+#dots { position: absolute; right: 96px; bottom: 56px; display: flex; gap: 10px; padding: 16px 20px; border-radius: 22px; }
+#dots span { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.45); width: 10px; transition: width 380ms cubic-bezier(.2,.8,.2,1), background 300ms; }
+#dots span.on { width: 34px; background: #fff; }
+
+/* Apps grid */
+#grid { position: absolute; left: 380px; right: 120px; top: 370px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.tile { height: 190px; border-radius: 34px; padding: 22px 28px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+.tile img { width: 84px; height: 84px; border-radius: 20px; }
+.tile .mark { font-size: 34px; }
+.tile .nm { font-size: 24px; font-weight: 500; }
+.tile.off { opacity: 0.45; }
+/* Apps tiles: darker smoked glass and a defined edge so they never vanish into a bright photo */
+.tile, .lite .tile { background: linear-gradient(160deg, rgba(30,36,50,0.72), rgba(12,15,22,0.78)); }
+.tile { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.32), inset 0 1px 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(0,0,0,0.35), 0 22px 40px -24px rgba(0,0,0,0.6); }
+.tile .glow { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 220ms ease;
+  background: linear-gradient(160deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 60%); box-shadow: 0 0 0 2px rgba(255,255,255,0.8), 0 0 50px -12px rgba(255,255,255,0.45); }
+.tile.f .glow { opacity: 1; }
+
+/* Settings */
+#setPanel { position: absolute; left: 380px; top: 150px; width: 1160px; padding: 44px 56px; box-sizing: border-box; border-radius: 48px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -30px 60px -40px rgba(255,255,255,0.12), 0 60px 120px -40px rgba(0,0,0,0.75), 0 14px 30px -14px rgba(0,0,0,0.4); }
+#rows { margin-top: 26px; display: flex; flex-direction: column; gap: 8px; }
+.row { display: flex; align-items: center; justify-content: space-between; min-height: 82px; padding: 0 30px; border-radius: 26px; background: rgba(255,255,255,0.06); color: #fff; }
+.row .t { display: flex; flex-direction: column; gap: 4px; padding: 12px 0; text-align: left; }
+.row .t b { font-size: 27px; font-weight: 500; }
+.row .t i { font-style: normal; font-size: 18px; opacity: 0.7; }
+.row .v { font-size: 24px; font-weight: 500; opacity: 0.88; }
+.row.f { background: #fff; color: #0a0d14; box-shadow: 0 14px 36px -12px rgba(0,0,0,0.45); }
+
+/* Hand-off and toast */
+#handoff { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(6,9,15,0.72); opacity: 0; pointer-events: none; }
+#handoff.on { opacity: 1; }
+#spinner { width: 64px; height: 64px; border-radius: 32px; box-shadow: inset 0 0 0 3px rgba(255,255,255,0.25); border-top: 3px solid #fff; box-sizing: border-box; animation: spin 900ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#hoName { margin-top: 34px; font-family: 'Inter Tight', sans-serif; font-size: 52px; font-weight: 500; }
+#hoNote { margin-top: 12px; font-size: 22px; color: rgba(255,255,255,0.72); }
+#toast { position: absolute; left: 50%; top: 64px; transform: translate(-50%, -20px); padding: 22px 36px; border-radius: 28px; font-size: 24px; opacity: 0; pointer-events: none; }
+#toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* Exit confirmation (Samsung requires one on Return from the app's home page) */
+#confirm { position: absolute; left: 50%; top: 50%; width: 640px; padding: 48px 48px 40px; box-sizing: border-box; border-radius: 44px; text-align: center; opacity: 0; pointer-events: none;
+  transform: translate(-50%, -46%) scale(0.98); transition: opacity 240ms ease, transform 320ms cubic-bezier(.22,1,.36,1); z-index: 40;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), 0 60px 120px -40px rgba(0,0,0,0.8); }
+#confirm.on { opacity: 1; transform: translate(-50%, -50%); }
+#confirm .q { font-family: 'Inter Tight', sans-serif; font-size: 46px; font-weight: 500; }
+#confirm .btns { margin-top: 36px; display: flex; gap: 20px; justify-content: center; }
+.cb { min-width: 200px; padding: 22px 0; border-radius: 26px; font-size: 28px; font-weight: 500; background: rgba(255,255,255,0.08); transition: background 200ms ease, color 200ms ease; }
+.cb.f { background: #fff; color: #0a0d14; }

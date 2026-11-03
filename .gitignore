@@ -1,0 +1,19 @@
+# Build output (signed with a personal certificate)
+dist/
+*.wgt
+
+# Never commit Samsung certificates or signing profiles
+*.p12
+*.pri
+*.pwd
+*.csr
+*.crt
+profiles.xml
+
+# Tool output
+tools/tv-audit/apps.csv
+tools/tv-audit/dlog_*.txt
+
+# Background media is fetched, not stored here: see scripts/fetch-media.ps1.
+# The files are Pexels/Unsplash content that may not be redistributed.
+app/media/
