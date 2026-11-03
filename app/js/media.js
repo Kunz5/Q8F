@@ -1,4 +1,4 @@
-﻿/* Q8F background library: videos ('v') and photos ('p'). Generated; photos from Unsplash, videos from Pexels. */
+﻿/* Q8F background library: videos ('v') and photos ('p'). Photos from Unsplash, videos from Pexels; sources for every file are in CREDITS.md. */
 window.Q8F_MEDIA = [
   { t: 'v', src: 'media/v1.mp4', place: 'Hong Kong', detail: 'Victoria Harbour from above' },
   { t: 'v', src: 'media/v2.mp4', place: 'Singapore', detail: 'Marina Bay at night' },
